@@ -62,13 +62,15 @@ module GravatarImageTag
 
   module InstanceMethods
     def gravatar_image_tag(email, options = {})
+      height = options.delete(:height)
+      width = options.delete(:width)
       gravatar_overrides = options.delete(:gravatar)
       options[:src] = gravatar_image_url(email, gravatar_overrides)
       options[:alt] ||= 'Gravatar'
       if GravatarImageTag.configuration.include_size_attributes
         size = GravatarImageTag::gravatar_options(gravatar_overrides)[:size] || 160
-        options[:height] ||= (size/2).to_s
-        options[:width] ||= (size/2).to_s
+        options[:height] = height || (size/2).to_s
+        options[:width] = width || (size/2).to_s
       end
 
       # Patch submitted to rails to allow image_tag here
